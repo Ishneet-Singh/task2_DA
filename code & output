@@ -1,0 +1,166 @@
+I have coded this in Pycharm
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df=pd.read_csv("Supermart Grocery Sales - Retail Analytics Dataset.csv")
+print(df.head())
+
+  #output 1
+  Order ID Customer Name          Category  ... Discount  Profit       State
+0      OD1        Harish      Oil & Masala  ...     0.12  401.28  Tamil Nadu
+1      OD2         Sudha         Beverages  ...     0.18  149.80  Tamil Nadu
+2      OD3       Hussain       Food Grains  ...     0.21  165.20  Tamil Nadu
+3      OD4       Jackson  Fruits & Veggies  ...     0.25   89.60  Tamil Nadu
+4      OD5       Ridhesh       Food Grains  ...     0.26  918.45  Tamil Nadu
+
+
+print(df.info())
+ 
+# output 2
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 9994 entries, 0 to 9993
+Data columns (total 11 columns):
+ #   Column         Non-Null Count  Dtype  
+---  ------         --------------  -----  
+ 0   Order ID       9994 non-null   object 
+ 1   Customer Name  9994 non-null   object 
+ 2   Category       9994 non-null   object 
+ 3   Sub Category   9994 non-null   object 
+ 4   City           9994 non-null   object 
+ 5   Order Date     9994 non-null   object 
+ 6   Region         9994 non-null   object 
+ 7   Sales          9994 non-null   int64  
+ 8   Discount       9994 non-null   float64
+ 9   Profit         9994 non-null   float64
+ 10  State          9994 non-null   object 
+dtypes: float64(2), int64(1), object(8)
+memory usage: 859.0+ KB
+None
+
+print(df.describe())
+ 
+  #output 3
+               Sales     Discount       Profit
+count  9994.000000  9994.000000  9994.000000
+mean   1496.596158     0.226817   374.937082
+std     577.559036     0.074636   239.932881
+min     500.000000     0.100000    25.250000
+25%    1000.000000     0.160000   180.022500
+50%    1498.000000     0.230000   320.780000
+75%    1994.750000     0.290000   525.627500
+max    2500.000000     0.350000  1120.950000
+
+
+print(df['Category'].value_counts())
+ 
+  #output 4
+  Category
+Snacks               1514
+Eggs, Meat & Fish    1490
+Fruits & Veggies     1418
+Bakery               1413
+Beverages            1400
+Food Grains          1398
+Oil & Masala         1361
+Name: count, dtype: int64
+print(df['Region'].value_counts())
+  #output 5
+Region
+West       3203
+East       2848
+Central    2323
+South      1619
+North         1
+Name: count, dtype: int64
+
+print(df.isnull().sum())
+ 
+  #output 6
+  Order ID         0
+Customer Name    0
+Category         0
+Sub Category     0
+City             0
+Order Date       0
+Region           0
+Sales            0
+Discount         0
+Profit           0
+State            0
+dtype: int64
+  
+
+plt.figure(figsize=(10,6))
+sns.heatmap(df.isnull(), cbar=False, cmap="viridis")
+plt.title("Missing Values Heatmap")
+plt.show()
+  #output 7
+  https://drive.google.com/file/d/1sbIPqQ6nmh0AQz3l2sRgGarGPTvKF8p-/view?usp=share_link
+
+  
+
+# 1. Histogram (distribution of Sales)
+plt.figure(figsize=(8,5))
+sns.histplot(df['Sales'], bins=30, kde=True)
+plt.title("Distribution of Sales")
+plt.show()
+#output 8
+  https://drive.google.com/file/d/1sbIPqQ6nmh0AQz3l2sRgGarGPTvKF8p-/view?usp=share_link
+
+# 2. Boxplot (Profit by Category)
+plt.figure(figsize=(8,5))
+sns.boxplot(x="Category", y="Profit", data=df)
+plt.title("Profit Distribution by Category")
+plt.show()
+#output 9
+  https://drive.google.com/file/d/1sbIPqQ6nmh0AQz3l2sRgGarGPTvKF8p-/view?usp=share_link
+
+# 3. Pairplot (Sales, Profit, Discount relationships)
+sns.pairplot(df[['Sales','Profit','Discount']], diag_kind="kde")
+plt.suptitle("Pairplot of Sales, Profit, and Discount", y=1.02)
+plt.show()
+  3outptu 10
+  https://drive.google.com/file/d/1sbIPqQ6nmh0AQz3l2sRgGarGPTvKF8p-/view?usp=share_link
+
+
+# 4. Countplot (frequency of categories)
+plt.figure(figsize=(8,5))
+sns.countplot(x="Category", data=df, order=df['Category'].value_counts().index)
+plt.title("Count of Orders by Category")
+plt.show()
+  #output 11
+  https://drive.google.com/file/d/1sbIPqQ6nmh0AQz3l2sRgGarGPTvKF8p-/view?usp=share_link
+
+corr = df.corr(numeric_only=True)
+
+# Heatmap
+plt.figure(figsize=(8,6))
+sns.heatmap(corr, annot=True, cmap="coolwarm", center=0, fmt=".2f")
+plt.title("Correlation Heatmap of Numeric Variables")
+plt.show()
+  #output 12
+  https://drive.google.com/file/d/1sbIPqQ6nmh0AQz3l2sRgGarGPTvKF8p-/view?usp=share_link
+
+category_summary = df.groupby("Category").agg({
+    "Sales": ["sum", "mean"],
+    "Profit": ["sum", "mean"],
+    "Discount": ["mean"]
+}).reset_index()
+
+# Display result
+print(category_summary)
+  #output 13
+              Category    Sales                  Profit              Discount
+                          sum         mean        sum        mean      mean
+0             Bakery  2112281  1494.891012  528521.06  374.041798  0.225428
+1          Beverages  2085313  1489.509286  525605.76  375.432686  0.230329
+2  Eggs, Meat & Fish  2267401  1521.745638  567357.22  380.776658  0.227792
+3        Food Grains  2115272  1513.070100  529162.64  378.514049  0.228548
+4   Fruits & Veggies  2100727  1481.471791  530400.38  374.048223  0.229295
+5       Oil & Masala  2038442  1497.753123  497895.29  365.830485  0.224526
+6             Snacks  2237546  1477.903567  568178.85  375.283256  0.222048
+
+
